@@ -1,12 +1,14 @@
 var React = require('react');
 var DefaultLayout = require('./Layouts/default');
+var mongo = require('mongodb').MongoClient;
+var url = 'mongodb://admin:1234@ds013991.mlab.com:13991/linkedun';
 
 var i=2;
-
 var Offers = React.createClass({
   render: function() {
     var createItem = function(item) {
       return <dd><li><b>Company: </b>{item.Company}</li>
+                  <li><b>Field: </b>{item.Field}</li>
                  <li><b>NameContact: </b>{item.NameContact}</li>
                  <li><b>TelContact: </b>{item.TelContact}</li>
                  <li><b>Description: </b>{item.Description}</li>
@@ -18,7 +20,6 @@ var Offers = React.createClass({
   }
 
 });
-var oie="CY";
 var Friends = React.createClass({
   render: function() {
     var createItem = function(item) {
@@ -35,7 +36,7 @@ var Friends = React.createClass({
 
 var showProfile = React.createClass({
     render: function() {
-    return (      
+    return (
       <div>
        <h3>Profile</h3>
         <fieldset>
@@ -47,7 +48,7 @@ var showProfile = React.createClass({
                                 <dd><b>E-mail:</b> {listValue.email} </dd>
                                 <dd><b>Career:</b> {listValue.Career} </dd>
                                 <dd><b>Semester:</b> {listValue.Semester}</dd>
-                          </dl> 
+                          </dl>
                   })}
           </ul>
        </fieldset>
@@ -56,7 +57,7 @@ var showProfile = React.createClass({
         <legend> Offers </legend>
            <form id="Offer" name="Offer" method="post" action="/Offer">
              <button id="off" name="addOffer" class="btn btn-inverse">Add Offer</button>
-           </form>   
+           </form>
 
             {this.props.list.map(function(listValue){
                     return <Offers items={listValue.Offers} />
@@ -65,11 +66,27 @@ var showProfile = React.createClass({
     </fieldset>
 
     <fieldset>
-        <legend> Friends </legend> 
+        <legend> Friends </legend>
 
             {this.props.list.map(function(listValue){
                     return <Friends items={listValue.Friends} />
             })}
+
+    </fieldset>
+
+    <fieldset>
+        <legend> Suggested Offers </legend>
+
+          {this.props.list2.map(function(listValue){
+                  return <Offers items={listValue.Offers} />
+          })}
+
+    </fieldset>
+
+    <fieldset>
+        <legend> Suggested Friends </legend>
+        FUCKLESS FUCK
+
 
     </fieldset>
 

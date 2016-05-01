@@ -1,0 +1,46 @@
+var firstFriend =result.map(function(list){
+                               return list.Friends[0].email
+                             }).toString();
+                             console.log(firstFriend);
+ var first = JSON.stringify(firstFriend)
+
+ collection.find({"email":"laJuana@freedom.com"}).toArray(function (err2, result2) {
+   console.log(result2);
+    res.render('Profile.jsx',{list:result,friendOffers:result2});
+  });
+
+  router.post('/Profile', function(req, res){
+
+    mongo.connect(url, function (err, db) {
+    if (err) {
+      console.log('Unable to connect to the Server', err);
+    } else {
+      // We are connected
+      console.log('Connection established to', url);
+
+      // Get the documents collection
+      var collection = db.collection('Users');
+      // Find all students
+
+      collection.find({"email":req.body.user,"Password":req.body.pass}).toArray(function (err, result) {
+        if (err) {
+          res.send(err);
+        } else if (result.length) {
+          email1=JSON.stringify(req.body.user);
+             var firstFriend =result.map(function(list){
+                                            return list.Friends[0].email
+                                          }).toString();
+              var first = JSON.stringify(firstFriend)
+              res.render('Profile.jsx',{list:result});
+
+        } else {
+           res.render('popUp.jsx',{info:"Opssssss"});
+        }
+        //Close connection
+        db.close();
+      });
+
+    }
+
+    });
+  });

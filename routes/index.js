@@ -17,43 +17,43 @@ router.post('/Regist', function(req, res){
 
  //Submit Regist
 router.post('/addUser', function(req, res){
- 
+
     // Connect to the server
     mongo.connect(url, function(err, db){
       if (err) {
         console.log('Unable to connect to the Server:', err);
       } else {
         console.log('Connected to Server');
- 
+
         // Get the documents collection
         var collection = db.collection('Users');
- 
+
         // Get the student data passed from the form
         var user = {Name: req.body.Name, LastName: req.body.LastName,
           email: req.body.email, Password: req.body.Pass, Career: req.body.Career,
           Semester: req.body.Semester, Friends:[{"Name":"","LastName":"","email":""}],
-          Offers:[{"Company":"","NameContact":"","TelContact":"","Description":"","Salary":""}]};
- 
+          Offers:[{"Company":"","Field": "","NameContact":"","TelContact":"","Description":"","Salary":""}]};
+
         // Insert the student data into the database
         collection.insert([user], function (err, result){
           if (err) {
             console.log(err);
           } else {
- 
+
             // Redirect to the updated student list
-            
+
             res.render('popUp.jsx',{info:"Success!"});
           }
- 
+
           // Close the database
           db.close();
         });
- 
+
       }
     });
 });
 
-router.post('/Profile', function(req, res){ 
+router.post('/Profile', function(req, res){
 
   mongo.connect(url, function (err, db) {
   if (err) {
@@ -61,7 +61,7 @@ router.post('/Profile', function(req, res){
   } else {
     // We are connected
     console.log('Connection established to', url);
- 
+
     // Get the documents collection
     var collection = db.collection('Users');
     // Find all students
@@ -70,18 +70,28 @@ router.post('/Profile', function(req, res){
       if (err) {
         res.send(err);
       } else if (result.length) {
-        email1=JSON.stringify(req.body.user);  
+        email1=req.body.user;
+           var firstFriend =result.map(function(list){
+                                          return list.Friends[0].email
+                                        }).toString();
+          var userlist = collection.find({"email":{ $ne: email1 }}).limit(2).toArray(function(err,docs){
+           // docs is an array of all the documents in mycollection
+               res.render('Profile.jsx',{list:result,list2:docs});
+           });
 
-        res.render('Profile.jsx',{list:result});
-             
+
       } else {
          res.render('popUp.jsx',{info:"Opssssss"});
       }
       //Close connection
-      db.close();
+         //db.close();
     });
+
   }
-  });
+
+  }
+);
+
 });
 
 router.post('/Offer', function(req, res){
@@ -95,7 +105,7 @@ router.post('/addOffer', function(req, res){
         console.log('Unable to connect to the Server:', err);
       } else {
         console.log('Connected to Server');
- 
+
         // Get the documents collection
         var collection = db.collection('Users');
 
@@ -113,11 +123,11 @@ router.post('/addOffer', function(req, res){
 
              res.render('popUp.jsx',{info:"Success!"});
           }
- 
+
           // Close the database
           db.close();
         });
- 
+
       }
     });
 });
